@@ -1,5 +1,15 @@
+'use client'; // 1. Add this at the very top to make it a Client Component
+
+import { useRouter } from 'next/navigation'; // 2. Import from 'next/navigation'
 
 export default function DarkLandingPage() {
+  const router = useRouter(); // 3. Get the router object from Next.js
+
+  const handleGetStarted = () => {
+    router.push('/login'); // 4. Use router.push() to navigate
+  };
+
+
   return (
     // Main container with a dark gradient background
     <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-blue-950 text-slate-200">
@@ -11,7 +21,6 @@ export default function DarkLandingPage() {
               Welcome to Our Platform
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              {/* Gradient text adjusted for dark background */}
               <span className="bg-gradient-to-r from-slate-100 via-slate-300 to-slate-500 bg-clip-text text-transparent">
                 Build Something
               </span>
@@ -20,7 +29,6 @@ export default function DarkLandingPage() {
                 Amazing Today
               </span>
             </h1>
-            {/* Paragraph text color changed for readability */}
             <p className="text-xl md:text-2xl text-slate-400 mb-8 leading-relaxed">
               Join thousands of users who trust our platform to bring their ideas to life.
               Start your journey with a simple sign-up.
@@ -33,7 +41,6 @@ export default function DarkLandingPage() {
                   </svg>
                 </div>
                 <div>
-                  {/* Feature text colors adjusted */}
                   <p className="font-semibold text-slate-100">Fast & Secure</p>
                   <p className="text-slate-400 text-sm">Enterprise-grade security</p>
                 </div>
@@ -71,7 +78,10 @@ export default function DarkLandingPage() {
             <p className="text-slate-400 mb-8 text-center">
               Create an account in seconds.
             </p>
-            <button className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300">
+            <button
+              onClick={handleGetStarted}
+              className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-300"
+            >
               Get Started Now
             </button>
           </div>
