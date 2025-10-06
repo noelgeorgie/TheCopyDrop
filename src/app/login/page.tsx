@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'; // 1. Import Link
+import Link from 'next/link';
+
 
 const LoginPage = () => {
   return (
@@ -48,9 +49,13 @@ const LoginPage = () => {
 
         <p className="text-center text-sm text-slate-400 mt-8">
           Don't have an account?{' '}
-          {/* 2. Replace <a> with <Link> and href with to */}
-          <Link to="/register" className="font-semibold text-cyan-400 hover:underline">
+          <Link href="/register" className="font-semibold text-cyan-400 hover:underline">
             Sign Up
+          </Link>
+
+          <p></p><br></br>
+          <Link href="/" className="font-semibold text-cyan-400 hover:underline">
+             Go Back?
           </Link>
         </p>
       </div>
