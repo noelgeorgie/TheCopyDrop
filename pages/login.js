@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { HiEye, HiEyeOff } from 'react-icons/hi'; // Import eye icons from react-icons
 import ParticlesBackground from '../components/ParticlesBackground';
 import { supabase } from '../lib/supabaseClient';
 
@@ -10,6 +11,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const router = useRouter();
 
   const handleLogin = async (e) => {
@@ -49,21 +51,14 @@ export default function Login() {
         }
 
         // --- Redirection Logic ---
-        // This part is already correct. The router.push() function navigates
-        // to a URL path, not a component file path. Next.js handles the rest.
         switch (role) {
           case 'scc-admin':
-            // Correct: This navigates to the URL '/admin/dashboard'.
-            // Next.js then correctly renders the page file at 'pages/admin/dashboard.js',
-            // which in turn displays your component from 'components/dashboard/admin/'.
             router.push('/admin/dashboard');
             break;
           case 'staff':
-            // Correct: This navigates to '/staff/dashboard'.
             router.push('/staff/dashboard');
             break;
           case 'front-office':
-             // Correct: This navigates to '/office/dashboard'.
             router.push('/office/dashboard');
             break;
           default:
@@ -96,16 +91,27 @@ export default function Login() {
                       className="w-full p-3 text-white bg-gray-800/50 rounded-md border border-gray-700 focus:border-indigo-500 focus:ring focus:ring-indigo-500/50 outline-none transition" 
                     />
                 </div>
-                <div>
+<div>
                     <label className="text-sm font-bold text-gray-300 block mb-1">Password</label>
-                    <input 
-                      type="password" 
-                      value={password} 
-                      onChange={(e) => setPassword(e.target.value)} 
-                      required 
-                      className="w-full p-3 text-white bg-gray-800/50 rounded-md border border-gray-700 focus:border-indigo-500 focus:ring focus:ring-indigo-500/50 outline-none transition" 
-                    />
+                    <div className="relative">
+                        <input 
+                            type={showPassword ? 'text' : 'password'}
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            required 
+                            className="w-full p-3 text-white bg-gray-800/50 rounded-md border border-gray-700 focus:border-indigo-500 focus:ring focus:ring-indigo-500/50 outline-none transition pr-12" 
+                        />
+                        <button 
+                            type="button" 
+                            onClick={() => setShowPassword(prev => !prev)}
+                            className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-white"
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                            {showPassword ? <HiEyeOff size={22} /> : <HiEye size={22} />}
+                        </button>
+                    </div>
                 </div>
+
                  <div className="text-right">
                     <Link href="/forgot-password" legacyBehavior>
                         <a className="text-sm text-indigo-400 hover:underline">Forgot Password?</a>
@@ -119,11 +125,7 @@ export default function Login() {
                     {loading ? 'Logging in...' : 'Login'}
                 </button>
             </form>
-            <p className="text-center text-gray-400 pt-2">
-                Don't have an account? <Link href="/register" legacyBehavior><a className="text-indigo-400 hover:underline">Register</a></Link>
-            </p>
-        </div>
+          </div>
     </div>
   );
 }
-

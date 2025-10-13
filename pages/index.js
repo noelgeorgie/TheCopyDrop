@@ -106,7 +106,7 @@ export default function Home() {
                   Authenticate to proceed to the internal dashboard.
                 </motion.p>
                 <motion.div
-                  className="flex flex-col sm:flex-row justify-center gap-4"
+                  className="flex flex-col sm:flex-row justify-center gap-4"  
                   variants={itemVariants}
                 >
                   <Link href="/login" legacyBehavior>
@@ -114,12 +114,8 @@ export default function Home() {
                       Login
                     </a>
                   </Link>
-                  <Link href="/register" legacyBehavior>
-                    <a className="font-semibold py-3 px-8 rounded-lg text-lg text-gray-200 bg-gray-800/90 hover:bg-gray-700/90 border border-gray-700 shadow-lg shadow-gray-900/30 hover:shadow-gray-900/40 transition-all duration-300 transform hover:scale-105">
-                      Register
-                    </a>
-                  </Link>
                 </motion.div>
+
               </div>
             </motion.div>
 
