@@ -54,7 +54,7 @@ export default function AdminDashboard() {
       setUser({ ...session.user, ...profile }); // ✅ COMBINE OBJECTS
 
       // Fetch statistics (this part remains the same)
-      const { data: allProfiles } = await supabase.from('profiles').select('role');
+      const { data: allProfiles } = await supabase.rpc('get_profiles_data');
       if (allProfiles) {
         const roleCounts = allProfiles.reduce((acc, p) => {
           const role = p.role || 'unassigned';
