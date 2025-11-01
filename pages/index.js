@@ -3,7 +3,6 @@ import { Server, ShieldCheck, Zap } from 'lucide-react'; // Using icons for a be
 import Head from 'next/head';
 import Link from 'next/link';
 import ParticlesBackground from '../components/ParticlesBackground';
-import ThemeSwitcher from '../components/ThemeSwitcher';
 
 export default function Home() {
   const containerVariants = {
@@ -46,7 +45,6 @@ export default function Home() {
           >
             Sivadas C and Company
           </motion.h1>
-          <ThemeSwitcher />
         </header>
 
         {/* Main content now uses a two-column layout on large screens */}
