@@ -7,29 +7,25 @@ import { useState } from 'react';
 export default function Sidebar({ user, handleLogout }) {
   const router = useRouter();
 
-  // 3. Update the navItems data structure
+  // Updated navItems with correct routing paths
   const navItems = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     {
       label: 'User Management',
       icon: Users,
-      basePath: '/admin/manage-users', // Used to detect active parent
+      basePath: '/admin', // Base path for detecting active parent
       subItems: [
-        { href: '/admin/manage-users/all', label: 'All Users' },
-        { href: '/admin/manage-users/add', label: 'Add New User' },
-        { href: '/admin/manage-users/roles', label: 'Manage Roles' },
+        { href: '/admin/manage-user', label: 'All Users' },
+        { href: '/admin/add-user', label: 'Add New User' },
       ],
     },
   ];
 
-  // 4. State to manage which dropdown is open.
-  // We'll initialize it based on the current route for a better user experience.
+  // State to manage which dropdown is open
   const activeParent = navItems.find(item => item.basePath && router.pathname.startsWith(item.basePath));
   const [openDropdown, setOpenDropdown] = useState(activeParent ? activeParent.label : null);
 
-
   const handleDropdownToggle = (label) => {
-    // If the clicked dropdown is already open, close it. Otherwise, open it.
     setOpenDropdown(openDropdown === label ? null : label);
   };
 
@@ -40,14 +36,13 @@ export default function Sidebar({ user, handleLogout }) {
       </div>
       
       <nav className="flex-1 p-4 space-y-2">
-        {/* 5. Updated rendering logic */}
         {navItems.map((item) => (
           item.subItems ? (
             <div key={item.label}>
               <button
                 onClick={() => handleDropdownToggle(item.label)}
                 className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
-                  router.pathname.startsWith(item.basePath)
+                  router.pathname.startsWith(item.basePath) && router.pathname !== '/admin/dashboard'
                   ? 'bg-indigo-600 text-white'
                   : 'text-gray-400 hover:bg-gray-700 hover:text-white'
                 }`}
@@ -65,7 +60,7 @@ export default function Sidebar({ user, handleLogout }) {
                     <Link key={subItem.href} href={subItem.href} legacyBehavior>
                       <a className={`flex items-center p-2 rounded-lg text-sm transition-colors ${
                         router.pathname === subItem.href
-                        ? 'text-white'
+                        ? 'bg-indigo-500 text-white'
                         : 'text-gray-400 hover:bg-gray-700 hover:text-white'
                       }`}>
                         {subItem.label}

@@ -88,12 +88,11 @@ export default function AdminDashboard() {
     <>
       <Head><title>Admin Dashboard</title></Head>
       <div className="flex min-h-screen bg-gray-900 text-white">
-        {/* The Sidebar will now correctly receive the user object with the email */}
         <Sidebar user={user} handleLogout={handleLogout} />
 
         <div className="flex-1 flex flex-col">
           <header className="bg-gray-800 p-6 border-b border-gray-700">
-            <h1 className="text-2xl font-bold">Welcome, {user?.full_name}</h1>
+            <h1 className="text-xl font-bold">Welcome, {user?.full_name}</h1>
           </header>
           
           <main className="p-8 flex-1">
