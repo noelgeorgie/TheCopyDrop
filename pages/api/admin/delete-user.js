@@ -1,5 +1,8 @@
 import { sendUnauthorizedResponse, verifyAdmin } from '../../../utils/adminMiddleware';
-import { supabaseAdmin } from '../../../utils/supabaseClient';
+// WRONG:
+// import { supabaseAdmin } from '../../../utils/supabaseClient';
+// RIGHT:
+import { supabaseAdmin } from '../../../utils/supabaseAdmin';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,33 +10,56 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Verify the user is an admin
     const verification = await verifyAdmin(req);
     if (!verification.authorized) {
       return sendUnauthorizedResponse(res, verification);
     }
 
-    // 2. Get data from the request
-    const { userId } = req.body;
-    if (!userId) {
-      return res.status(400).json({ error: 'Missing userId' });
+    const { email, password, full_name, role } = req.body;
+    if (!email || !password || !full_name || !role) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // 3. Use the admin client to delete the user
-    // This deletes the user from auth.users, and your database
-    // trigger (or cascade) should handle deleting their profile.
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
+    const { data: authData, error: createError } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name
+      }
+    });
 
-    if (error) {
-      throw error;
+    if (createError) {
+      throw createError;
     }
 
-    return res.status(200).json({ success: true, message: 'User deleted' });
+    if (authData.user) {
+      const { error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .upsert({
+          id: authData.user.id,
+          full_name,
+          role,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (profileError) {
+        throw profileError;
+      }
+    }
+
+    return res.status(200).json({ 
+      success: true, 
+      message: 'User created successfully',
+      user: authData.user
+    });
 
   } catch (error) {
-    console.error('Error deleting user:', error);
+    console.error('Error creating user:', error);
     return res.status(500).json({ 
-      error: error.message || 'Failed to delete user' 
+      error: error.message || 'Failed to create user' 
     });
   }
 }

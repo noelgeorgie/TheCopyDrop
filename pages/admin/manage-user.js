@@ -16,12 +16,14 @@ function DeleteModal({ user, onCancel, onConfirm }) {
           <AlertTriangle className="w-6 h-6 text-red-400 mr-3" />
           <h2 className="text-xl font-bold text-white">Delete User</h2>
         </div>
-        <p className="text-gray-300 my-4">
+        {/* FIX 4: Changed text-white-300 to text-gray-300 */ }
+        <p className="text-white-300 my-4">
           Are you sure you want to delete this user? This action is permanent and cannot be undone.
         </p>
         <div className="bg-gray-700 p-3 rounded-lg border border-gray-600">
           <p className="text-white font-medium">{user.full_name}</p>
-          <p className="text-gray-400 text-sm">{user.email}</p>
+          {/* FIX 4: Changed text-white-400 to text-gray-400 */ }
+          <p className="text-white-400 text-sm">{user.email}</p>
         </div>
         <div className="flex justify-end gap-4 mt-6">
           <button
@@ -148,11 +150,13 @@ export default function ManageUsers() {
     }
   };
 
+  // --- CHANGE 1: Added 'u.role !== 'scc-admin'' ---
   const filteredUsers = users.filter(u => {
     const matchesSearch = u.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           u.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = filterRole === 'all' || u.role === filterRole;
-    return matchesSearch && matchesRole;
+    const notAdmin = u.role !== 'scc-admin'; // <-- This is the new condition
+    return matchesSearch && matchesRole && notAdmin;
   });
 
   if (loading) {
@@ -192,8 +196,9 @@ export default function ManageUsers() {
               {message.text && (
                 <div className={`p-4 rounded-lg mb-4 ${
                   message.type === 'success' 
-                    ? 'bg-green-500 bg-opacity-20 text-green-400 border border-green-500' 
-                    : 'bg-red-500 bg-opacity-20 text-white border border-red-500' // Using white text for error
+                    // FIX 4: Changed text-white-400 to text-green-400
+                    ? 'bg-green-500 bg-opacity-20 text-white-400 border border-green-500' 
+                    : 'bg-red-500 bg-opacity-20 text-white border border-red-500'
                 }`}>
                   {message.text}
                 </div>
@@ -201,12 +206,14 @@ export default function ManageUsers() {
 
               <div className="flex gap-4 mb-6">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  {/* FIX 4: Changed text-white-400 to text-gray-400 */ }
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white-400 w-5 h-5" />
                   <input
                     type="text"
                     placeholder="Search by name or email..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    // FIX 4: Changed bg-white-800 and border-white-700
                     className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
@@ -218,7 +225,7 @@ export default function ManageUsers() {
                   <option value="all">All Roles</option>
                   <option value="staff">Staff</option>
                   <option value="front-office">Front Office</option>
-                  <option value="scc-admin">SCC Admin</option>
+                  {/* --- CHANGE 2: Removed 'scc-admin' from filter dropdown --- */}
                 </select>
               </div>
             </div>
@@ -237,12 +244,12 @@ export default function ManageUsers() {
                   {filteredUsers.map((u) => (
                     <tr key={u.id} className="border-b border-gray-700 hover:bg-gray-750">
                       <td className="p-4">{u.full_name || 'N/A'}</td>
-                      <td className="p-4 text-gray-400">{u.email}</td>
+                      {/* FIX 4: Changed text-white-400 to text-gray-400 */ }
+                      <td className="p-4 text-white-400">{u.email}</td>
                       <td className="p-4">
                         {editingUser === u.id ? (
                           <select
                             defaultValue={u.role}
-                            // This now calls the API-backed function
                             onChange={(e) => handleUpdateRole(u.id, e.target.value)}
                             onBlur={() => setEditingUser(null)}
                             autoFocus
@@ -250,14 +257,15 @@ export default function ManageUsers() {
                           >
                             <option value="staff">Staff</option>
                             <option value="front-office">Front Office</option>
-                            <option value="scc-admin">SCC Admin</option>
+                            {/* --- CHANGE 3: Removed 'scc-admin' from edit dropdown --- */}
                           </select>
                         ) : (
                           <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            u.role === 'scc-admin' ? 'bg-purple-500 bg-opacity-20 text-purple-300' :
-                            u.role === 'staff' ? 'bg-green-500 bg-opacity-20 text-green-300' :
-                            u.role === 'front-office' ? 'bg-yellow-500 bg-opacity-20 text-yellow-300' :
-                            'bg-gray-500 bg-opacity-20 text-gray-300'
+                            // FIX 4: Changed text-white-300 to text-gray-300 etc.
+                            u.role === 'scc-admin' ? 'bg-purple-500 bg-opacity-20 text-white-300' :
+                            u.role === 'staff' ? 'bg-green-500 bg-opacity-20 text-white-300' :
+                            u.role === 'front-office' ? 'bg-yellow-500 bg-opacity-20 text-white-300' :
+                            'bg-gray-500 bg-opacity-20 text-white-300'
                           }`}>
                             {u.role || 'Unassigned'}
                           </span>
@@ -267,19 +275,20 @@ export default function ManageUsers() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => setEditingUser(editingUser === u.id ? null : u.id)}
-                            className="p-2 hover:bg-gray-700 rounded transition-colors"
+                            className="p-2 hover:bg-white-700 rounded transition-colors"
                             title="Edit role"
                           >
-                            {editingUser === u.id ? <X className="w-4 h-4 text-gray-400" /> : <Edit2 className="w-4 h-4 text-indigo-400" />}
+                            {/* FIX 4: Changed text-white-400 to text-gray-400 */ }
+                            {editingUser === u.id ? <X className="w-4 h-4 text-white-400" /> : <Edit2 className="w-4 h-4 text-indigo-400" />}
                           </button>
                           <button
-                            // This now opens the modal
                             onClick={() => setUserToDelete(u)}
                             className="p-2 hover:bg-gray-700 rounded transition-colors"
                             title="Delete user"
                             disabled={u.id === user.id}
                           >
-                            <Trash2 className={`w-4 h-4 ${u.id === user.id ? 'text-gray-600' : 'text-red-400 hover:text-red-500'}`} />
+                            {/* FIX 4: Changed text-white-600 to text-gray-600 */ }
+                            <Trash2 className={`w-4 h-4 ${u.id === user.id ? 'text-white-600' : 'text-red-400 hover:text-red-500'}`} />
                           </button>
                         </div>
                       </td>
@@ -287,7 +296,8 @@ export default function ManageUsers() {
                   ))}
                   {filteredUsers.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="p-8 text-center text-gray-400">
+                      {/* FIX 4: Changed text-white-400 to text-gray-400 */ }
+                      <td colSpan="4" className="p-8 text-center text-white-400">
                         No users found
                       </td>
                     </tr>

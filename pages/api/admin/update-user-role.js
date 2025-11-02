@@ -1,5 +1,8 @@
 import { sendUnauthorizedResponse, verifyAdmin } from '../../../utils/adminMiddleware';
-import { supabaseAdmin } from '../../../utils/supabaseClient';
+// WRONG:
+// import { supabaseAdmin } from '../../../utils/supabaseClient';
+// RIGHT:
+import { supabaseAdmin } from '../../../utils/supabaseAdmin';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,24 +10,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Verify the user is an admin
     const verification = await verifyAdmin(req);
     if (!verification.authorized) {
       return sendUnauthorizedResponse(res, verification);
     }
 
-    // 2. Get data from the request
     const { userId, newRole } = req.body;
     if (!userId || !newRole) {
       return res.status(400).json({ error: 'Missing userId or newRole' });
     }
 
-    // 3. Use the admin client to update the profile
     const { data, error } = await supabaseAdmin
       .from('profiles')
       .update({ role: newRole })
       .eq('id', userId)
-      .select(); // Use .select() to confirm the update
+      .select();
 
     if (error) {
       throw error;

@@ -15,15 +15,24 @@ export default async function handler(req, res) {
       return sendUnauthorizedResponse(res, verification);
     }
 
-    const { userId, newRole } = req.body;
-    if (!userId || !newRole) {
-      return res.status(400).json({ error: 'Missing userId or newRole' });
+    const { jobId, newStatus } = req.body;
+    if (!jobId || !newStatus) {
+      return res.status(400).json({ error: 'Missing jobId or newStatus' });
+    }
+
+    let updateData = {
+      status: newStatus
+    };
+
+    if (newStatus === 'completed') {
+      updateData.handler_id = verification.user.id;
+      updateData.completed_at = new Date().toISOString();
     }
 
     const { data, error } = await supabaseAdmin
-      .from('profiles')
-      .update({ role: newRole })
-      .eq('id', userId)
+      .from('print_jobs')
+      .update(updateData)
+      .eq('id', jobId)
       .select();
 
     if (error) {
@@ -31,15 +40,15 @@ export default async function handler(req, res) {
     }
     
     if (!data || data.length === 0) {
-      return res.status(404).json({ error: 'User profile not found to update' });
+      return res.status(404).json({ error: 'Print job not found' });
     }
 
-    return res.status(200).json({ success: true, message: 'Role updated' });
+    return res.status(200).json({ success: true, message: 'Job status updated' });
 
   } catch (error) {
-    console.error('Error updating role:', error);
+    console.error('Error updating print job:', error);
     return res.status(500).json({ 
-      error: error.message || 'Failed to update role' 
+      error: error.message || 'Failed to update print job' 
     });
   }
 }

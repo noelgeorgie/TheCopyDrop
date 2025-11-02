@@ -17,6 +17,7 @@ export default function Sidebar({ user, handleLogout }) {
       subItems: [
         { href: '/admin/manage-user', label: 'All Users' },
         { href: '/admin/add-user', label: 'Add New User' },
+        { href: '/admin/view-print-jobs', label: 'View Print Jobs' },
       ],
     },
   ];

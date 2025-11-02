@@ -1,6 +1,8 @@
-// CHANGE 1: Import 'supabaseAdmin', not 'supabase'.
-// This assumes 'supabaseAdmin' is exported from this file.
-import { supabaseAdmin } from './supabaseClient';
+// WRONG:
+// import { supabaseAdmin } from './supabaseClient';
+
+// RIGHT:
+import { supabaseAdmin } from './supabaseAdmin';
 
 /**
  * Middleware to verify if a user is an admin
@@ -20,7 +22,7 @@ export async function verifyAdmin(req) {
 
     const token = authHeader.replace('Bearer ', '');
     
-    // CHANGE 2: Use the admin client to verify the token
+    // This will now work
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
 
     if (authError || !user) {
@@ -31,7 +33,7 @@ export async function verifyAdmin(req) {
       };
     }
 
-    // CHANGE 3: Use the admin client to bypass RLS and read the profile
+    // This will also work
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('role, full_name')
@@ -41,7 +43,7 @@ export async function verifyAdmin(req) {
     if (profileError || !profile) {
       return { 
         authorized: false, 
-        error: 'Profile not found', // This was the error you were seeing
+        error: 'Profile not found', 
         status: 403 
       };
     }
