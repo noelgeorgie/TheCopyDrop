@@ -207,12 +207,12 @@ function ModernLoginPage() {
               <div className="text-center">
                 <p className="text-gray-400">
                   Forgot your Password?{' '}
-                  <a
+                  <Link // <--- THIS IS THE FIX
                     href="/forgot-password"
                     className="font-medium text-indigo-400 hover:text-purple-400 transition-colors"
                   >
                     Reset it here
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>
