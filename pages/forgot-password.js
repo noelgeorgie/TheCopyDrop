@@ -1,4 +1,5 @@
 import { ArrowRight, Mail } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { HiHome } from 'react-icons/hi';
 import { supabase } from '../lib/supabaseClient';
