@@ -48,12 +48,12 @@ export default function ForgotPassword() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
         {/* Logo */}
         <div className="mb-8 text-center">
-          <a 
+          <Link 
             href="/"
             className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-lg hover:scale-105 transition-transform"
           >
             <HiHome className="w-8 h-8 text-white" />
-          </a>
+          </Link>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
             Reset Password
           </h1>
@@ -118,12 +118,12 @@ export default function ForgotPassword() {
               <div className="text-center">
                 <p className="text-gray-400">
                   Remember your password?{' '}
-                  <a
+                  <Link
                     href="/login"
                     className="font-medium text-indigo-400 hover:text-purple-400 transition-colors"
                   >
                     Login
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>
